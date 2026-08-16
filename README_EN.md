@@ -53,6 +53,9 @@ conda create -n omni python==3.12 && conda activate omni
 pip install -r requirements.txt
 # Download model weights (see the official README; for CN networks first run:
 #   export HF_ENDPOINT=https://hf-mirror.com)
+# Required weights (~1.3 GB):
+#   weights/icon_detect_v3/model.pt                                        (YOLOv9-E icon detector)
+#   weights/icon_caption_florence/{config.json, generation_config.json, model.safetensors} (Florence-2 captioner)
 ```
 
 > Once the weights are downloaded you can verify the backend manually. Note the

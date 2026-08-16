@@ -48,7 +48,10 @@ git clone https://github.com/microsoft/OmniParser
 cd OmniParser
 conda create -n omni python==3.12 && conda activate omni
 pip install -r requirements.txt
-# 国内网络先设置 $env:HF_ENDPOINT="https://hf-mirror.com"，再按官方 README 下载权重
+# 国内网络先设置 $env:HF_ENDPOINT="https://hf-mirror.com"，再按官方 README 下载权重。
+# 需要的权重（约 1.3 GB）：
+#   weights/icon_detect_v3/model.pt                     （YOLOv9-E 图标检测器）
+#   weights/icon_caption_florence/{config.json, generation_config.json, model.safetensors} （Florence-2 描述模型）
 ```
 
 > 权重下载完成后，可先手动验证后端能起来（注意端口：本项目统一用 **8010**，
