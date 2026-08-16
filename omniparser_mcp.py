@@ -36,7 +36,15 @@ import time
 from urllib.parse import urlparse
 
 import httpx
-from mcp.server.fastmcp import FastMCP
+
+try:
+    from mcp.server.fastmcp import FastMCP
+except ModuleNotFoundError:
+    raise SystemExit(
+        "FastMCP is not available. This project requires mcp 1.x (mcp 2.0 moved FastMCP "
+        "to a separate package). Install with:\n"
+        "    pip install 'mcp>=1.0,<2.0'"
+    )
 
 # Default backend port is 8010 (not 8000) to avoid clashing with other dev
 # tools; override with OMNIPARSER_API_URL if the backend runs elsewhere.
