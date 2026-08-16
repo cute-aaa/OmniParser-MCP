@@ -31,9 +31,15 @@ jobs:
           python -c "import mcp, httpx; print('mcp', getattr(mcp, '__version__', '?'), '| httpx', httpx.__version__)"
 
       - name: Syntax check
-        run: python -m compileall -q omniparser_mcp.py test_mcp.py test_ci_smoke.py
+        run: python -m compileall -q omniparser_mcp.py test_mcp.py test_ci_smoke.py test_direct.py
 
-      - name: Smoke test (no backend required)
+      - name: Direct unit tests (no subprocess)
+        run: python test_direct.py
+
+      - name: Import check
+        run: python -c "import omniparser_mcp; print('omniparser_mcp import ok')"
+
+      - name: Stdio smoke test
         shell: bash
         run: |
           set -o pipefail
