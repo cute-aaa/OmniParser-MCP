@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "omniparser": {
+      "command": "python",
+      "args": ["${workspaceFolder}/omniparser_mcp.py"],
+      "env": {
+        "OMNIPARSER_API_URL": "http://127.0.0.1:8000"
+      }
+    }
+  }
+}

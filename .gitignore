@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+test_som.png
+.env
+test_image.png
+
