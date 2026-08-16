@@ -51,27 +51,41 @@ pip install -r requirements.txt
 # 国内网络先设置 $env:HF_ENDPOINT="https://hf-mirror.com"，再按官方 README 下载权重
 ```
 
+> 权重下载完成后，可先手动验证后端能起来（注意端口：本项目统一用 **8010**，
+> 与官方默认 8000 不同，请显式加 `--port 8010`）：
+>
+> ```powershell
+> python -m omniparserserver --caption_model_name florence2 `
+>     --caption_model_path ../../weights/icon_caption_florence `
+>     --device cuda --BOX_TRESHOLD 0.05 --host 127.0.0.1 --port 8010
+> ```
+
 ### 2. 启动后端（二选一）
 
 **方式 A — 手动启动（推荐，后端生命周期自己掌控）**
 
 ```powershell
-# 从本仓库运行；自动探测 OmniParser 目录，或显式指定：
+# 从本仓库运行。start_backend.ps1 会自动向上层目录探测 OmniParser，
+# 但本仓库 clone 后不含官方 OmniParser，通常需显式指定 -OmniParserHome：
 pwsh -File start_backend.ps1 -OmniParserHome D:\OmniParser -Device cuda
 ```
 
 **方式 B — MCP 自动启动**
 
 在 MCP 客户端配置的 `env` 里加上 `OMNIPARSER_HOME`（见下节），后端未运行时会自动拉起并等待就绪
-（首次约 30–60 秒加载模型），无需手动操作。
+（首次加载模型约 30–60 秒，最长等待 240 秒），无需手动操作。
 
 ### 3. 安装本仓库依赖并注册 MCP
 
 ```powershell
-pip install -r requirements.txt   # 仅 mcp + httpx
+pip install -r requirements.txt   # 仅 mcp(<2.0) + httpx
 ```
 
-**Claude Desktop** — 编辑 `%APPDATA%\Claude\claude_desktop_config.json`：
+> 本仓库依赖建议装进**与步骤 1 相同的 conda 环境**（`omni`），MCP 层与 OmniParser 层共用
+> 一个 Python 环境即可。
+
+**Claude Desktop** — 编辑 `%APPDATA%\Claude\claude_desktop_config.json`（把
+`D:\OmniParser-MCP`、`D:\OmniParser` 替换为你的实际路径）：
 
 ```json
 {
@@ -97,8 +111,13 @@ pip install -r requirements.txt   # 仅 mcp + httpx
 ### 4. 自测
 
 ```powershell
-python test_mcp.py
+python test_mcp.py        # 完整测试：需后端已在 8010 运行、且仓库内放一张截图
+                          # （默认用 test_image.png，可替换为任意截图）
+python test_ci_smoke.py   # 轻量冒烟测试：无需后端/GPU，任何环境可跑
 ```
+
+`test_mcp.py` 会枚举工具、检查后端状态并解析截图；`test_ci_smoke.py` 只验证
+MCP server 能启动、工具可用、无后端时优雅报错。
 
 ## 工具说明
 

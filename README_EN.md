@@ -55,12 +55,23 @@ pip install -r requirements.txt
 #   export HF_ENDPOINT=https://hf-mirror.com)
 ```
 
+> Once the weights are downloaded you can verify the backend manually. Note the
+> port: this project uses **8010** everywhere (the official default is 8000), so
+> pass `--port 8010` explicitly:
+>
+> ```bash
+> python -m omniparserserver --caption_model_name florence2 \
+>     --caption_model_path ../../weights/icon_caption_florence \
+>     --device cuda --BOX_TRESHOLD 0.05 --host 127.0.0.1 --port 8010
+> ```
+
 ### 2. Start the backend (choose one)
 
 **Option A — manual start (recommended, you own the backend lifecycle)**
 
 ```powershell
-# From this repo; auto-detects the OmniParser directory, or specify it:
+# From this repo. start_backend.ps1 probes parent directories for OmniParser,
+# but this repo does not contain it after cloning, so usually pass -OmniParserHome:
 pwsh -File start_backend.ps1 -OmniParserHome D:\OmniParser -Device cuda
 ```
 
@@ -68,15 +79,19 @@ pwsh -File start_backend.ps1 -OmniParserHome D:\OmniParser -Device cuda
 
 Add `OMNIPARSER_HOME` to the `env` of your MCP client config (see below). When the backend is not
 running, the first tool call launches it automatically and waits until it is ready (first start takes
-~30–60 s while models load).
+~30–60 s while models load; up to 240 s max).
 
 ### 3. Install this repo's deps and register the MCP server
 
 ```bash
-pip install -r requirements.txt    # mcp + httpx only
+pip install -r requirements.txt    # mcp (<2.0) + httpx only
 ```
 
-**Claude Desktop** — edit `%APPDATA%\Claude\claude_desktop_config.json`:
+> Install these into the **same conda environment as step 1** (`omni`) — the MCP
+> layer and the OmniParser layer share one Python environment.
+
+**Claude Desktop** — edit `%APPDATA%\Claude\claude_desktop_config.json` (replace
+`D:\OmniParser-MCP` and `D:\OmniParser` with your actual paths):
 
 ```json
 {
@@ -100,9 +115,14 @@ path editing is needed after cloning): `.cursor/mcp.json` and `.cline/mcp_settin
 ### 4. Smoke test
 
 ```bash
-python test_mcp.py        # full local test (needs the backend running)
-python test_ci_smoke.py   # CI-safe test (no backend / GPU required)
+python test_mcp.py        # full test: needs the backend on :8010 and a screenshot
+                          # in the repo (defaults to test_image.png; replace it)
+python test_ci_smoke.py   # lightweight CI-safe test: no backend / GPU required
 ```
+
+`test_mcp.py` enumerates tools, checks the backend and parses a screenshot;
+`test_ci_smoke.py` only verifies the MCP server starts, tools are exposed, and
+errors are graceful without a backend.
 
 ## Tools
 
