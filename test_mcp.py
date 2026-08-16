@@ -3,7 +3,7 @@
 Run from this repo:
     python test_mcp.py
 
-Requires the official omniparserserver backend running on :8000
+Requires the official omniparserserver backend running on :8010
 (or set OMNIPARSER_API_URL).
 """
 
@@ -18,9 +18,20 @@ ROOT = Path(__file__).resolve().parent
 SERVER_PY = ROOT / "omniparser_mcp.py"
 IMG = ROOT / "test_image.png"  # replace with any screenshot
 
+# Pass through the MCP-relevant env vars explicitly (mcp stdio may not inherit
+# shell-set vars reliably on Windows).
+MCP_ENV = {
+    **os.environ,
+    "OMNIPARSER_API_URL": os.environ.get("OMNIPARSER_API_URL", "http://127.0.0.1:8010"),
+    "OMNIPARSER_HOME": os.environ.get("OMNIPARSER_HOME", ""),
+    "OMNIPARSER_DEVICE": os.environ.get("OMNIPARSER_DEVICE", "cuda"),
+}
+
 
 async def main():
-    params = StdioServerParameters(command="python", args=[str(SERVER_PY)], cwd=str(ROOT))
+    params = StdioServerParameters(
+        command="python", args=[str(SERVER_PY)], cwd=str(ROOT), env=MCP_ENV
+    )
     async with stdio_client(params) as (read, write):
         async with ClientSession(read, write) as session:
             await session.initialize()
