@@ -21,10 +21,28 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Show versions
+        run: |
+          python --version
+          python -c "import mcp, httpx; print('mcp', getattr(mcp, '__version__', '?'), '| httpx', httpx.__version__)"
 
       - name: Syntax check
         run: python -m compileall -q omniparser_mcp.py test_mcp.py test_ci_smoke.py
 
       - name: Smoke test (no backend required)
-        run: python test_ci_smoke.py
+        shell: bash
+        run: |
+          set -o pipefail
+          python -u test_ci_smoke.py 2>&1 | tee smoke_test.log
+
+      - name: Upload smoke log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-log-${{ matrix.python-version }}
+          path: smoke_test.log
+          if-no-files-found: ignore

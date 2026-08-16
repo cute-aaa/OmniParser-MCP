@@ -1,6 +1,6 @@
 # OmniParser MCP Server
 
-[![CI](https://github.com/cute-aaa/OmniParser-MCP/actions/workflows/ci.yml/badge.svg)](https://github.com/cute-aaa/OmniParser-MCP/actions/workflows/ci.yml)
+[![CI](https://github.com/cute-aaa/OmniParser-MCP/actions/workflows/ci.yml/badge.svg)](https://github.com/cute-aaa/OmniParser-MCP/actions/workflows/ci.yml)　[English](README_EN.md)
 
 把微软 [OmniParser](https://github.com/microsoft/OmniParser)（纯视觉 GUI Agent 的屏幕解析工具）封装为
 [Model Context Protocol](https://modelcontextprotocol.io) 服务，让 Claude Desktop、Cursor、Cline 等
