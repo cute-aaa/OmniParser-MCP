@@ -119,8 +119,8 @@ python test_mcp.py        # 完整测试：需后端已在 8010 运行、且仓�
 python test_ci_smoke.py   # 轻量冒烟测试：无需后端/GPU，任何环境可跑
 ```
 
-`test_mcp.py` 会枚举工具、检查后端状态并解析截图；`test_ci_smoke.py` 只验证
-MCP server 能启动、工具可用、无后端时优雅报错。
+`test_mcp.py` 会枚举工具、检查后端状态并解析截图（解析结果打印时截断为前 1500 字符）；
+`test_ci_smoke.py` 只验证 MCP server 能启动、工具可用、无后端时优雅报错。
 
 ## 工具说明
 
@@ -145,7 +145,7 @@ Agent: 调用 parse_screen(image_path="C:\shots\app.png", image_size="2560,1440"
 | 工具报 backend not reachable | 启动后端（`start_backend.ps1`），或设置 `OMNIPARSER_HOME` 启用自动启动 |
 | 自动启动后仍失败 | 确认 `OMNIPARSER_DEVICE`（无 GPU 用 `cpu`）、OmniParser 权重已下载、依赖已装 |
 | 解析结果为空 | 调低 `box_threshold`（如 0.03）再试 |
-| 首次调用慢 | 正常，模型 warm-up 约 30–40 秒，之后更快 |
+| 解析耗时约 30–40 秒 | 正常：首调用含模型 warm-up，之后仍受截图大小与批量处理影响（大图约 30 秒/张） |
 
 ## License
 

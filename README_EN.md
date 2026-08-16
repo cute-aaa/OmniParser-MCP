@@ -150,7 +150,7 @@ Agent: calls parse_screen(image_path="C:\shots\app.png", image_size="2560,1440")
 | Tool reports "backend not reachable" | Start the backend (`start_backend.ps1`) or set `OMNIPARSER_HOME` to enable auto-start |
 | Auto-start still fails | Check `OMNIPARSER_DEVICE` (`cpu` without a GPU), weights downloaded, deps installed; auto-start logs go to `%TEMP%\omniparser_backend.log` |
 | Empty parse results | Lower `box_threshold` (e.g. 0.03) |
-| First call is slow | Expected: model warm-up takes ~30–40 s, later calls are faster |
+| Parse takes ~30–40 s | Expected: first call includes model warm-up; later calls still depend on image size and batching (~30 s per large image) |
 
 ## License
 
